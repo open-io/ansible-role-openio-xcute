@@ -1,0 +1,8 @@
+---
+openio_xcute_sysconfig_dir: "/etc/oio/sds/{{ openio_xcute_namespace }}"
+openio_xcute_servicename: "xcute-{{ openio_xcute_serviceid }}"
+
+openio_xcute_definition_file: >
+  "{{ openio_xcute_sysconfig_dir }}/
+  {{ openio_xcute_servicename }}/{{ openio_xcute_servicename }}.conf"
+...

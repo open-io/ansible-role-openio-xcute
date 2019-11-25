@@ -1,0 +1,78 @@
+# roles/xcute/tasks/main.yml
+---
+- name: "Include {{ ansible_distribution }} variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: install
+
+- name: "Include {{ ansible_distribution }} tasks"
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: install
+
+- name: Ensure directories exists
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner | default('openio') }}"
+    group: "{{ item.group | default('openio') }}"
+    mode: "{{ item.mode | default(0755) }}"
+  with_items:
+    - path: "/etc/gridinit.d/{{ openio_xcute_namespace }}"
+    - path: "{{ openio_xcute_sysconfig_dir }}/{{ openio_xcute_servicename }}"
+    - path: "/var/log/oio/sds/{{ openio_xcute_namespace }}/{{ openio_xcute_servicename }}"
+      owner: "{{ syslog_user }}"
+      mode: "0750"
+  tags: install
+
+- name: Generate configuration files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: openio
+    group: openio
+    mode: 0644
+  with_items:
+    - src: "xcute.conf.j2"
+      dest: "{{ openio_xcute_sysconfig_dir }}/\
+        {{ openio_xcute_servicename }}/{{ openio_xcute_servicename }}.conf"
+    - src: "gridinit_xcute.conf.j2"
+      dest: "{{ openio_xcute_gridinit_dir }}/{{ openio_xcute_gridinit_file_prefix }}\
+        {{ openio_xcute_servicename }}.conf"
+  register: _xcute_conf
+  tags: configure
+
+- name: "reload gridinit to apply the new configuration"
+  shell: gridinit_cmd reload
+  when:
+    - _xcute_conf is changed
+    - not openio_xcute_provision_only
+
+- name: 'Start service or reload changed config'
+  shell: "gridinit_cmd {{ verb }} {{ openio_xcute_namespace }}-{{ openio_xcute_servicename }}"
+  tags: configure
+  when:
+    - not openio_xcute_provision_only
+  vars:
+    verb: "{{ 'restart' if not openio_xcute_provision_only and _xcute_conf is changed else 'start' }}"
+
+# - block:
+#     - name: check xcute
+#       uri:
+#         url: "http://{{ openio_xcute_bind_address }}:{{ openio_xcute_bind_port }}/status"
+#         return_content: true
+#         status_code: 200
+#       register: _xcute_check
+#       retries: 3
+#       delay: 5
+#       until: _xcute_check is success
+#       changed_when: false
+#       tags: configure
+#       when:
+#         - not openio_xcute_provision_only
+#   when: openio_bootstrap | d(false)
+...

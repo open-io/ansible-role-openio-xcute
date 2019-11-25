@@ -1,0 +1,7 @@
+# roles/xcute/vars/RedHat.yml
+# Distribution-specific variables for RHEL, CentOS, ...
+---
+xcute_packages:
+  - openio-sds-server
+syslog_user: openio
+...

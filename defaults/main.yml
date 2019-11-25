@@ -1,0 +1,34 @@
+# roles/xcute/defaults/main.yml
+---
+openio_xcute_namespace: "{{ namespace | default('OPENIO') }}"
+openio_xcute_serviceid: "{{ 0 + openio_legacy_serviceid | d(0) | int }}"
+
+openio_xcute_gridinit_dir: "/etc/gridinit.d/{{ openio_xcute_namespace }}"
+openio_xcute_gridinit_file_prefix: ""
+
+openio_xcute_bind_interface: "{{ ansible_default_ipv4.alias }}"
+openio_xcute_bind_address:
+  "{{ openio_bind_address \
+    | default(hostvars[inventory_hostname]['ansible_' + openio_xcute_bind_interface]['ipv4']['address']) }}"
+openio_xcute_bind_port: 6400
+
+openio_xcute_redis_inventory_groupname: redis
+openio_xcute_sentinels_hosts: "{{ (groups[openio_xcute_redis_inventory_groupname] \
+  | map('extract', hostvars, ['openio_bind_address'])\
+  | map('regex_replace', '$', ':6012') \
+  | join(',')) if openio_xcute_redis_inventory_groupname in groups \
+  else \
+  openio_xcute_bind_address ~ ':6012' }}"
+openio_xcute_sentinel_master_name: "{{ openio_xcute_namespace }}-master-1"
+openio_xcute_redis_standalone: ""
+
+openio_xcute_server_enabled: true
+openio_xcute_orchestrator_enabled: true
+
+openio_xcute_workers: 1
+openio_xcute_log_level: INFO
+
+openio_xcute_beanstalkd_address: "beanstalk://{{ openio_xcute_bind_address }}:6014"
+
+openio_xcute_provision_only: false
+...

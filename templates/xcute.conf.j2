@@ -1,0 +1,26 @@
+# {{ ansible_managed }}
+[DEFAULT]
+log_level = {{ openio_xcute_log_level }}
+syslog_prefix = OIO,{{ openio_xcute_namespace }},xcute,{{ openio_xcute_serviceid }}
+{% if openio_xcute_redis_standalone %}
+redis_host = {{ openio_xcute_redis_standalone }}
+{% else %}
+sentinel_hosts = {{ openio_xcute_sentinels_hosts }}
+sentinel_master_name = {{ openio_xcute_sentinel_master_name }}
+{% endif %}
+namespace = {{ openio_xcute_namespace }}
+
+{% if openio_xcute_server_enabled %}
+[xcute-server]
+bind_addr = {{ openio_xcute_bind_address }}
+bind_port = {{ openio_xcute_bind_port }}
+{% if openio_xcute_workers is defined and openio_xcute_workers %}workers = {{ openio_xcute_workers }}{% endif %}
+{% endif %}
+
+{% if openio_xcute_orchestrator_enabled %}
+[xcute-orchestrator]
+orchestrator_id = {{ (openio_xcute_namespace ~ ansible_host ~ openio_xcute_bind_address ~ openio_xcute_bind_port) | hash('md5') }}
+beanstalkd_workers_tube = oio-xcute
+beanstalkd_reply_tube = oio-xcute.reply
+beanstalkd_reply_addr = {{ openio_xcute_beanstalkd_address }}
+{% endif %}
