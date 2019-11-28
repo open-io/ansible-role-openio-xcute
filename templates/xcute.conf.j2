@@ -5,8 +5,8 @@ syslog_prefix = OIO,{{ openio_xcute_namespace }},xcute,{{ openio_xcute_serviceid
 {% if openio_xcute_redis_standalone %}
 redis_host = {{ openio_xcute_redis_standalone }}
 {% else %}
-sentinel_hosts = {{ openio_xcute_sentinels_hosts }}
-sentinel_master_name = {{ openio_xcute_sentinel_master_name }}
+redis_sentinel_hosts = {{ openio_xcute_sentinels_hosts }}
+redis_sentinel_name = {{ openio_xcute_sentinel_master_name }}
 {% endif %}
 namespace = {{ openio_xcute_namespace }}
 
@@ -16,6 +16,7 @@ bind_addr = {{ openio_xcute_bind_address }}
 bind_port = {{ openio_xcute_bind_port }}
 {% if openio_xcute_workers is defined and openio_xcute_workers %}workers = {{ openio_xcute_workers }}{% endif %}
 {% endif %}
+
 
 {% if openio_xcute_orchestrator_enabled %}
 [xcute-orchestrator]
