@@ -31,4 +31,11 @@ openio_xcute_log_level: INFO
 openio_xcute_beanstalkd_address: "beanstalk://{{ openio_xcute_bind_address }}:6014"
 
 openio_xcute_provision_only: false
+
+openio_xcute_location: "{{ openio_location_room | default ('') }}{{ openio_location_rack | default ('') }}\
+  {{ openio_location_server | default (ansible_hostname ~ '.') }}{{ openio_xcute_serviceid }}"
+openio_xcute_slots:
+  "{{ [ openio_xcute_type, openio_xcute_type ~ '-' ~ openio_xcute_location.split('.')[:-2] | join('-') ] \
+  if openio_xcute_location.split('.') | length > 2 \
+  else [ openio_xcute_type ] }}"
 ...

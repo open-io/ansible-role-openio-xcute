@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+---
+host: {{ openio_xcute_bind_address }}
+port: {{ openio_xcute_bind_port }}
+type: {{ openio_xcute_type }}
+{% if openio_xcute_location | ipaddr %}
+location: {{ openio_xcute_location | replace(".", "-") }}
+{% else %}
+location: {{ openio_xcute_location }}
+{% endif %}
+checks:
+  - {type: tcp}
+stats:
+  - {type: http, path: /status, parser: json}
+  - {type: system}
+slots:
+  {{ openio_xcute_slots | to_nice_yaml | indent(2) }}
+...
