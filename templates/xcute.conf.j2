@@ -20,7 +20,7 @@ bind_port = {{ openio_xcute_bind_port }}
 
 {% if openio_xcute_orchestrator_enabled %}
 [xcute-orchestrator]
-orchestrator_id = {{ (openio_xcute_namespace ~ ansible_host ~ openio_xcute_bind_address ~ openio_xcute_bind_port) | hash('md5') }}
+orchestrator_id = {{ (openio_xcute_namespace ~ ansible_host ~ openio_xcute_bind_address ~ openio_xcute_bind_port) | to_uuid }}
 beanstalkd_workers_tube = oio-xcute
 beanstalkd_reply_tube = oio-xcute.reply
 beanstalkd_reply_addr = {{ openio_xcute_beanstalkd_address }}
