@@ -51,6 +51,7 @@
 
 - name: "reload gridinit to apply the new configuration"
   shell: gridinit_cmd reload
+  tags: configure
   when:
     - _xcute_conf is changed
     - not openio_xcute_provision_only
