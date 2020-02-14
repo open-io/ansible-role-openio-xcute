@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 [Service.{{ openio_xcute_namespace }}-xcute-{{ openio_xcute_serviceid }}]
-command=/usr/bin/oio-xcute /etc/oio/sds/{{ openio_xcute_namespace }}/{{ openio_xcute_servicename }}/{{ openio_xcute_servicename }}.conf
+command=/usr/bin/oio-xcute {{ openio_xcute_sysconfig_dir }}/{{ openio_xcute_servicename }}/{{ openio_xcute_servicename }}.conf
 enabled=true
 start_at_boot=true
 on_die=respawn
