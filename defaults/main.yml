@@ -1,4 +1,3 @@
-# roles/xcute/defaults/main.yml
 ---
 openio_xcute_namespace: "{{ namespace | default('OPENIO') }}"
 openio_xcute_serviceid: "{{ 0 + openio_legacy_serviceid | d(0) | int }}"
@@ -38,4 +37,12 @@ openio_xcute_slots:
   "{{ [ openio_xcute_type, openio_xcute_type ~ '-' ~ openio_xcute_location.split('.')[:-2] | join('-') ] \
   if openio_xcute_location.split('.') | length > 2 \
   else [ openio_xcute_type ] }}"
+
+openio_xcute_sysconfig_dir: "/etc/oio/sds/{{ openio_xcute_namespace }}"
+openio_xcute_servicename: "xcute-{{ openio_xcute_serviceid }}"
+openio_xcute_type: xcute
+
+openio_xcute_definition_file: >
+  "{{ openio_xcute_sysconfig_dir }}/
+  {{ openio_xcute_servicename }}/{{ openio_xcute_servicename }}.conf"
 ...
