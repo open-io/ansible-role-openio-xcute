@@ -2,8 +2,8 @@
 openio_xcute_namespace: "{{ namespace | default('OPENIO') }}"
 openio_xcute_serviceid: "{{ 0 + openio_legacy_serviceid | d(0) | int }}"
 
-openio_xcute_gridinit_dir: "/etc/gridinit.d/{{ openio_xcute_namespace }}"
-openio_xcute_gridinit_file_prefix: ""
+openio_xcute_gridinit_dir: "{{ openio_gridinit_d | d('/etc/gridinit.d/') }}"
+openio_xcute_gridinit_file_prefix: "{{ openio_xcute_namespace }}-"
 
 openio_xcute_bind_interface: "{{ ansible_default_ipv4.alias }}"
 openio_xcute_bind_address:
@@ -29,7 +29,7 @@ openio_xcute_log_level: INFO
 
 openio_xcute_beanstalkd_address: "beanstalk://{{ openio_xcute_bind_address }}:6014"
 
-openio_xcute_provision_only: false
+openio_xcute_provision_only: "{{ openio_maintenance_mode | d(false) | bool }}"
 
 openio_xcute_location: "{{ openio_location_room | default ('') }}{{ openio_location_rack | default ('') }}\
   {{ openio_location_server | default (ansible_hostname ~ '.') }}{{ openio_xcute_serviceid }}"
