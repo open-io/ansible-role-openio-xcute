@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/open-io/ansible-role-openio-xcute.svg?branch=19.04)](https://travis-ci.org/open-io/ansible-role-openio-xcute)
+[![Build Status](https://travis-ci.org/open-io/ansible-role-openio-xcute.svg?branch=20.04)](https://travis-ci.org/open-io/ansible-role-openio-xcute)
 # Ansible role `xcute`
 
 An Ansible role for configure OpenIO xcute.
